@@ -1,9 +1,10 @@
+import Sidebar from "@/components/Sidebar/Sidebar"
 import React from "react"
-import NavBar from "@/components/Navbar/navBar"
 const Home : React.FC =()=>{
     return(
         <>
-        <NavBar></NavBar>
+       
+        <Sidebar/>
         </>
     )
 }

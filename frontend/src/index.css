@@ -6,8 +6,13 @@
 
 @theme inline {
     --font-smtext : "Montserrat", sans-serif;
-    --font-heading : "Poppins", sans-serif;
-    --font-subHeading : "Roboto_Mono", sans-serif;
+    --font-headingText : "Poppins", sans-serif;
+    --font-subHeadingText : "Roboto_Mono", sans-serif;
+    --color-primaryText : #4a4a68;
+    --color-secondaryText : #8b8b9e;
+    --color-accentText : #947bed;
+    --color-back1 : #f4e9fa;
+    --color-back2 : #e8fafa;
     --radius-sm: calc(var(--radius) - 4px);
     --radius-md: calc(var(--radius) - 2px);
     --radius-lg: var(--radius);
