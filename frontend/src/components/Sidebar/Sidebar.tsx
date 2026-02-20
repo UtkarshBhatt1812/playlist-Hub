@@ -16,7 +16,7 @@ const NewPlaylistBtn: React.FC = () => {
 
 const Sidebar: React.FC = () => {
   return (
-    <div className="flex h-screen w-xs items-center ">
+    <div className="flex h-screen w-xs items-center sticky top-0">
       <div className="backdrop:bg-accentText mx-6 gap-5 flex h-[90%] w-xs flex-col 
       items-center justify-center 
       rounded-[40px] border bg-linear-to-b from-[#fbf7fc] from-50% to-white">

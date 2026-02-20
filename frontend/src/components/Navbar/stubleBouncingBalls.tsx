@@ -11,10 +11,10 @@ const SubtleFloatingBalls = () => {
     <div className="
   absolute
   left-[50vw] 
-  sm:left-[53vw]
-  md:left-[55vw]
-  lg:left-[62vw]
-  xl:left-[65vw]
+  sm:left-[33vw]
+  md:left-[35vw]
+  lg:left-[40vw]
+  xl:left-[49vw]
   flex items-center justify-center gap-3
   p-6 sm:p-8 md:p-10 lg:p-12
   rounded-xl
@@ -24,7 +24,7 @@ const SubtleFloatingBalls = () => {
         <div
           key={index}
           className={`
-            w-3 h-3 rounded-full
+            w-2 h-2 rounded-full
             ${ball.color} ${ball.opacity}
             shadow-md animate-float
           `}
