@@ -58,12 +58,14 @@ const Home: React.FC = () => {
           <Filterdiv />
 
           <div className="px-6">
-            {/* <h2 className="text-4xl font-bold font-headingText text-primaryText mb-6 flex flex-col gap-2">
+            {
+            /* <h2 className="text-4xl font-bold font-headingText text-primaryText mb-6 flex flex-col gap-2">
               Vibe Check
               <span className="text-sm font-light text-secondaryText font-subHeadingText tracking-wider">
                 Playlist to match your current mood
               </span>
-            </h2> */}
+            </h2> */
+            }
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {playlists.map((playlist) => (
