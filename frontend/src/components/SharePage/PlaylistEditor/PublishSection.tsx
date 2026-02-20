@@ -22,7 +22,7 @@ const PublishSection: React.FC = () => {
         text-white
         shadow-lg
       ">
-        Publish Playlist 🚀
+        Publish Playlist 
       </button>
 
     </div>
