@@ -1,11 +1,12 @@
+import { useAppSelector } from "@/hooks/useAppSelector";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
 import type { JSX } from "react/jsx-dev-runtime";
 
-const PublicRoute = ({ children }: { children: JSX.Element }) => {
-  const { isAuthenticated } = useAuth();
 
-  if (isAuthenticated) {
+const PublicRoute = ({ children }: { children: JSX.Element }) => {
+  const token = useAppSelector((state) => state.auth.token);
+
+  if (token) {
     return <Navigate to="/" replace />;
   }
 

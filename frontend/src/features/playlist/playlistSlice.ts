@@ -3,6 +3,15 @@ import type { Playlist, PlaylistState } from "./playlist.types";
 
 const initialState: PlaylistState = {
   saved: [],
+  myPlaylist:[{
+      id: 1,
+      title: "Late Night Lo-Fi",
+      subtitle: "By PlaylistHub Curators",
+      image: "/Hero.png",
+      likes: "2.4k",
+      songs: 48,
+      featured: true,
+    }],
   allPlaylist: 
      [
     {
@@ -47,8 +56,13 @@ const playlistSlice = createSlice({
         state.saved.push(action.payload);
       }
     },
+    addPlaylist : ((state,action:PayloadAction<Playlist>)=>{
+        const exists = state.myPlaylist.find(p => p.id === action.payload.id)
+        if(!exists)
+            state.myPlaylist.push(action.payload)
+    })
   },
 });
 
-export const { toggleSave } = playlistSlice.actions;
+export const { toggleSave,addPlaylist } = playlistSlice.actions;
 export default playlistSlice.reducer;

@@ -1,10 +1,11 @@
+import { use } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { useState } from "react";
+
+import {useAppSelector }from "@/hooks/useAppSelector";
 
 const ProCard: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useAppSelector((state ) => state.auth);
   // const [loading, setLoading] = useState(false);
 
   // const isPro = user?.role === "pro"/'admin';

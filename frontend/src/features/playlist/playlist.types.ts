@@ -11,4 +11,5 @@ export interface Playlist {
 export interface PlaylistState {
   saved: Playlist[];
   allPlaylist: Playlist[];
+  myPlaylist: Playlist[];
 }

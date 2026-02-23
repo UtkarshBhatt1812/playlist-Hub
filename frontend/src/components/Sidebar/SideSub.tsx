@@ -40,7 +40,7 @@ const NavList: React.FC<NavListProps> = ({ items }) => {
         <NavLink
           key={name}
           to={path}
-          end={path === "/"}   // fixes root active issue
+           // fixes root active issue
           className={({ isActive }) =>
             `
             flex items-center gap-3

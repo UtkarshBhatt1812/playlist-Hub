@@ -13,6 +13,8 @@ import Login from "@/pages/LoginPage";
 import Signup from "@/pages/SignupPage";
 import NotFound from "@/pages/NotFound";
 import SavedPlaylist from "@/pages/SavedPlaylist";
+import MyPlaylistsPage from "@/pages/MyPlaylistPage";
+import SavedSongsPage from "@/pages/SavedSongsPage";
 
 const Router = () => {
   return (
@@ -29,9 +31,19 @@ const Router = () => {
               <Profile />
             </ProtectedRoute>
           }
+          
         />
+        <Route path="/my-playlists" element={
+
+           <ProtectedRoute>
+              <MyPlaylistsPage />
+            </ProtectedRoute>
+          
+        } />
       </Route>
-      <Route path="/create" element={<CreatePlaylist />} />
+      <Route path="/create" element={
+        <ProtectedRoute><CreatePlaylist /></ProtectedRoute> }
+        />
       <Route element={<AuthLayout />}>
         <Route
           path="/login"
@@ -52,7 +64,9 @@ const Router = () => {
           }
         />
       </Route>
-
+          <Route path="/saved-songs" element={
+            <ProtectedRoute><SavedSongsPage /></ProtectedRoute>
+          } />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

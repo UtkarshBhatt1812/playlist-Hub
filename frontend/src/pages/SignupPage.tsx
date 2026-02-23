@@ -53,7 +53,7 @@ const SignupPage: React.FC = () => {
             Already a member?
           </span>
 
-          <Link to={'login'} className="
+          <Link to="/login" className="
             px-5 py-2 rounded-full
             border border-accentText
             text-accentText

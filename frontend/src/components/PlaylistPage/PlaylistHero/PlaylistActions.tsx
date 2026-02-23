@@ -47,7 +47,7 @@ const PlaylistActions: React.FC = () => {
 
   return (
     <div className="flex gap-4 items-center">
-
+      
 
       <button
         onClick={handlePlay}
