@@ -3,7 +3,9 @@ import ApiError from "../../utils/ApiError";
 import { User } from "../../models/user.model";
 import bcrypt from "bcryptjs";
 import { getAccessToken, getRefreshToken } from "../../utils/signJWT";
+
 // key define krni h 
+
 const loginController = async (req, res) => {
     const {email , username ,password} = req.body;
     if(!email && !username ){
@@ -21,10 +23,13 @@ const loginController = async (req, res) => {
     .select("+password")
     
     if(!user){
+
         return ApiError(404, "User not found");
+
     }
 
-    const isCorrect = await bcrypt.compare(password, key);
+    const isCorrect = await bcrypt.compare(password, user.password);
+
     if(!isCorrect ){
         return ApiError(401, "Invalid credentials");
     }
@@ -34,10 +39,10 @@ const loginController = async (req, res) => {
     const accessToken = getAccessToken({id : user._id});
     const refreshToken = getRefreshToken({id : user._id});
 
+    
     user.refreshToken = refreshToken;
     await user.save();
 
-    
     res.cookie("accessToken", accessToken, {
         httpOnly : true,
         secure : false,
