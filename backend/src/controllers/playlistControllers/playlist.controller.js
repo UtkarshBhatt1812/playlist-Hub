@@ -5,7 +5,7 @@
   }
   return urlOrId;
 };
-export const createPlaylist = asyncHandler(async (req, res) => {
+export const createPlaylist = async (req, res) => {
   const { name, description, songs = [] } = req.body;
 
   if (!name) {
@@ -26,16 +26,16 @@ export const createPlaylist = asyncHandler(async (req, res) => {
   return res.status(201).json(
     new ApiResponse(201, "Playlist created successfully", playlist)
   );
-});
-export const getAllPlaylists = asyncHandler(async (req, res) => {
+};
+export const getAllPlaylists = async (req, res) => {
   const playlists = await Playlist.find({ isPublic: true })
     .populate("owner", "username email");
 
   return res.status(200).json(
     new ApiResponse(200, "Playlists fetched", playlists)
   );
-});
-export const likePlaylist = asyncHandler(async (req, res) => {
+};
+export const likePlaylist = async (req, res) => {
   const playlist = await Playlist.findById(req.params.id);
 
   if (!playlist) {
@@ -54,8 +54,8 @@ export const likePlaylist = asyncHandler(async (req, res) => {
   return res.status(200).json(
     new ApiResponse(200, "Playlist liked", { totalLikes: playlist.totalLikes })
   );
-});
-export const unlikePlaylist = asyncHandler(async (req, res) => {
+};
+export const unlikePlaylist = async (req, res) => {
   const playlist = await Playlist.findById(req.params.id);
 
   if (!playlist) {
@@ -73,8 +73,8 @@ export const unlikePlaylist = asyncHandler(async (req, res) => {
   return res.status(200).json(
     new ApiResponse(200, "Playlist unliked")
   );
-});
-export const deletePlaylist = asyncHandler(async (req, res) => {
+};
+export const deletePlaylist = async (req, res) => {
   const playlist = await Playlist.findById(req.params.id);
 
   if (!playlist) {
@@ -90,8 +90,8 @@ export const deletePlaylist = asyncHandler(async (req, res) => {
   return res.status(200).json(
     new ApiResponse(200, "Playlist deleted successfully")
   );
-});
-export const getMyPlaylists = asyncHandler(async (req, res) => {
+};
+export const getMyPlaylists = async (req, res) => {
   const playlists = await Playlist.find({
     owner: req.user._id,
   });
@@ -99,4 +99,4 @@ export const getMyPlaylists = asyncHandler(async (req, res) => {
   return res.status(200).json(
     new ApiResponse(200, "Your playlists fetched", playlists)
   );
-});
+};

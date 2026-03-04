@@ -1,26 +1,28 @@
-
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import ApiError from "../utils/ApiError";
+import ApiError from "../utils/ApiError.js";
+
 dotenv.config();
 
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
 
-const authHeader = req.headers.authorization;
-if (!authHeader || !authHeader.startsWith("Bearer ")) {
-  return ApiError(401, 'Unauthorized: No token provided');
-}
-try {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) 
+  {
+    return next(new ApiError(401, "Unauthorized: No token provided"));
+  }
+
+  try {
     const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
-    if(!decoded){
-       throw new ApiError(401, 'Unauthorized: Invalid token');
+    const decoded =  await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    if (!decoded) {
+      return next(new ApiError(401, "Unauthorized: Invalid token"));
     }
     req.user = decoded;
     next();
-} catch (error) {
-    next(new ApiError(401, 'Unauthorized: Invalid token'));
-}
+  } catch (error) {
+    return next(new ApiError(401, "Unauthorized: Invalid token"));
+  }
+};
 
-}
 export default authMiddleware;

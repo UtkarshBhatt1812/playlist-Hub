@@ -7,6 +7,6 @@ router.get("/profile", authMiddleware, (req, res) => {
   res.json(req.user);
 });
 
-router.get("/:id/playlists", authMiddleware, getUserPlaylists);
+// router.get("/:id/playlists", authMiddleware, getUserPlaylists);
 
 export default router;
