@@ -6,6 +6,11 @@
         required : true,
         trim : true
     },
+    image : {
+        type : String ,
+        default : "https://www.flaticon.com/free-icon/user_149071"  ,
+        trim : true
+    },
     email : {
         type : String , 
         required : true,
@@ -18,7 +23,11 @@
         minlength : 8,
         select : false
     },
-    playlist : {
+    savedPlaylists : {
+        type : [mongoose.Schema.Types.ObjectId],
+        ref : "Playlist"
+    },
+    myPlaylist : {
         type : [mongoose.Schema.Types.ObjectId],
         ref : "Playlist"
     },

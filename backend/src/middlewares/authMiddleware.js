@@ -5,15 +5,15 @@ import ApiError from "../utils/ApiError.js";
 dotenv.config();
 
 const authMiddleware = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) 
-  {
+
+  if (!req.cookies || !req.cookies.accessToken) {
     return next(new ApiError(401, "Unauthorized: No token provided"));
   }
+  
 
   try {
-    const token = authHeader.split(" ")[1];
+    const token = req.cookies.accessToken;
     const decoded =  await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     if (!decoded) {
       return next(new ApiError(401, "Unauthorized: Invalid token"));

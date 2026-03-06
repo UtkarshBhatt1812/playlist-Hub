@@ -27,9 +27,9 @@ const Router = () => {
         <Route
           path="/profile/:id"
           element={
-            <ProtectedRoute>
+            
               <Profile />
-            </ProtectedRoute>
+            
           }
           
         />
@@ -42,7 +42,7 @@ const Router = () => {
         } />
       </Route>
       <Route path="/create" element={
-        <ProtectedRoute><CreatePlaylist /></ProtectedRoute> }
+        <CreatePlaylist /> }
         />
       <Route element={<AuthLayout />}>
         <Route

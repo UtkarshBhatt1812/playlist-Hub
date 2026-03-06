@@ -10,6 +10,6 @@ export const registerUser = createAsyncThunk("auth/register",async(userData : {n
     return response.data;
 })  
 export const logoutUser = createAsyncThunk("auth/logout",async()=>{
-    localStorage.removeItem("token");
-    return true;
+    const response = await api.post("/auth/logout");
+    return response.data;
 })

@@ -2,8 +2,11 @@ import React from "react";
 import ProfileHeader from "../components/ProfilePage/ProfileHeader/ProfileHeader";
 import ProfileTabs from "../components/ProfilePage/ProfileTabs/ProfileTabs";
 import PlaylistGrid from "../components/ProfilePage/PlaylistGrid/PlaylistGrid";
+import api from "@/services/api";
 
 const ProfilePage: React.FC = () => {
+  const user = api.get('users/profile');
+  console.log(user)
   return (
     <div className="min-h-screen bg-linear-to-br from-10% via-60% via-[#f9f6ff] from-[#fefdff] to-[#fcfffe] px-10 py-8">
       <ProfileHeader

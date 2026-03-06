@@ -2,9 +2,7 @@ export interface AuthState {
   user: {
     id: string;
     name: string;
-    email: string;
-    role: "user" | "admin";
+    isAuthenticated: boolean;
   } | null;
-  token: string | null;
   loading: boolean;
 }

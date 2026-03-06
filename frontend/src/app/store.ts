@@ -4,7 +4,7 @@ import playlistReducer from "../features/playlist/playlistSlice";
 export const store = configureStore({
     reducer :{ 
         auth: authReducer,
-        playlist: playlistReducer
+        playlist: playlistReducer,
     }
 });
  

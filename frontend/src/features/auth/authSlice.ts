@@ -1,39 +1,45 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, logoutUser } from "./authThunks";
-import {type AuthState} from "./auth.types";
-
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { type AuthState } from "./auth.types";
 
 const initialState: AuthState = {
-  user: JSON.parse(localStorage.getItem("user") || "null"),
-  token: localStorage.getItem("token"),
+  user: {
+    id: "",
+    name: "",
+    isAuthenticated: false,
+  },
   loading: false,
 };
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: initialState,
+  initialState,
   reducers: {
 
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(loginUser.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+    setLoading(state, action: PayloadAction<boolean>) {
+      state.loading = action.payload;
+    },
 
-        localStorage.setItem("token", action.payload.token);
-        localStorage.setItem("user", JSON.stringify(action.payload.user));
-      })
-      .addCase(logoutUser.fulfilled, (state) => {
-        state.user = null;
-        state.token = null;
-        localStorage.clear();
-      });
+    setUser(
+      state,
+      action: PayloadAction<{ id: string; name: string }>
+    ) {
+      state.user = {
+        ...action.payload,
+        isAuthenticated: true,
+      };
+      state.loading = false;
+    },
+
+    logout(state) {
+      state.user.id = "";
+      state.user.name = "";
+      state.user.isAuthenticated = false;
+      state.loading = false;
+    },
+
   },
 });
+
+export const { setLoading, setUser, logout } = authSlice.actions;
 
 export default authSlice.reducer;

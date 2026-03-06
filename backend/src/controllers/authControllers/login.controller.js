@@ -8,11 +8,12 @@ import { getAccessToken, getRefreshToken } from "../../utils/signJwt.js";
 
 const loginController = async (req, res) => {
     const {email , username ,password} = req.body;
+
     if(!email && !username ){
-        return new ApiError(400, "Email or username is required");
+        throw new ApiError(400, "Email or username is required");
     }
     if(!password){
-        return new ApiError(400, "Password is required");
+        throw new ApiError(400, "Password is required");
     }
     const user = await User.findOne({
         $or: [
@@ -21,20 +22,22 @@ const loginController = async (req, res) => {
         ]
     })
     .select("+password")
+
     
     if(!user){
 
-        return new ApiError(404, "User not found");
+        throw new ApiError(404, "User not found");
 
     }
 
     const isCorrect = await bcrypt.compare(password, user.password);
 
     if(!isCorrect ){
-        return new ApiError(401, "Invalid credentials");
+        throw new ApiError(401, "Invalid credentials");
     }
     
     // generate token and refresh token
+
 
     const accessToken = getAccessToken(user);
     const refreshToken = getRefreshToken(user);
@@ -58,7 +61,11 @@ const loginController = async (req, res) => {
     res.status(200).json({
         success : true,
         message : "Login successful",
-        accessToken
+        user : {
+            id : user._id,
+            username : user.username,
+            email : user.email,
+        }
     })
 
 }

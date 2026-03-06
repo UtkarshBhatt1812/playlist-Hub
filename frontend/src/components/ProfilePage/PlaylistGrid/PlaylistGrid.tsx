@@ -9,17 +9,13 @@ const PlaylistGrid: React.FC = () => {
     { id: 3, title: "Focus Flow", image: "/p3.jpg" },
     { id: 4, title: "Indie Discoveries", image: "/p4.jpg" },
   ];
-
+  
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-8">
       {playlists.map((p) => (
         <PlaylistCard
           key={p.id}
-          title={p.title}
-          subtitle="By DJ Jhandu"
-          image={p.image}
-          likes="1.2k"
-          songs={12}
+          playlist={p}
         />
       ))}
     </div>
