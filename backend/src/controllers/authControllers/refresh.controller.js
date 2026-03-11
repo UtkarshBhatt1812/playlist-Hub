@@ -19,7 +19,7 @@ import { getAccessToken, getRefreshToken } from "../../utils/signJwt.js";
     throw new ApiError(401, "User not found");
   }
   if (user.refreshToken !== refreshToken) {
-    throw new ApiError(401, "Invalid refresh token2");
+    throw new ApiError(401, "Invalid refresh token");
   }
 
 

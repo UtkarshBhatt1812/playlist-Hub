@@ -5,6 +5,7 @@ import  refreshHandler from "../controllers/authControllers/refresh.controller.j
 import  logoutHandler from "../controllers/authControllers/logout.controller.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 
+
 const router = express.Router();
 
 router.post("/register", registerHandler);
