@@ -6,11 +6,13 @@ import { useAppSelector } from "@/hooks/useAppSelector";
 
 const PlaylistHero: React.FC<{ playlist: BackendPlaylist | null }> = ({ playlist }) => {
 
-  const userId = useAppSelector((state) => state.auth.user?.id);
+  const userId = useAppSelector((state) => state.auth.user.id);
 
   if (!playlist) return <NotFound />;
   // i m returning alreadyLiked  so i will pass opposite
-  const isLiked = playlist.likes.some((id) => id?.toString() === userId);
+  console.log("frontend fecth : ",playlist)
+  console.log("user",userId)
+  const isLiked = playlist.likes.some((id) => id?.toString() == userId);
   console.log("prev liked : ",isLiked)
 
   return (
@@ -32,7 +34,7 @@ const PlaylistHero: React.FC<{ playlist: BackendPlaylist | null }> = ({ playlist
           {playlist.description}
         </p>
 
-        <PlaylistActions  prevLiked = {!isLiked} />
+        <PlaylistActions  prevLiked = {isLiked} />
 
         <div className="flex gap-3 mt-4">
           {playlist.tags?.map(tag => (

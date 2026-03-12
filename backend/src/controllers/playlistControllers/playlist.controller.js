@@ -164,7 +164,7 @@ if (alreadyLiked) {
   await playlist.save();
 
   console.log("Playlist after Save : ", playlist);
-  res.json(alreadyLiked? true : false);
+  res.json(alreadyLiked);
 }
 export const getSavedPlaylists = async (req, res) => {
   const playlists = await Playlist.find({

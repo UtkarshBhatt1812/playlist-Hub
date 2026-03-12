@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+ import React, { useState } from "react";
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "@/features/auth/authThunks";
@@ -52,6 +52,7 @@ const LoginPage: React.FC = () => {
         setUser({
           id: response.payload.user.id,
           name: response.payload.user.username,
+          isAuthenticated: true
         }),
       );
       dispatch(setLoading(false));
@@ -63,6 +64,7 @@ const LoginPage: React.FC = () => {
         setUser({
           id: "",
           name: "",
+          isAuthenticated: false,
         }),
       );
       setAttempts((prev) => prev + 1);

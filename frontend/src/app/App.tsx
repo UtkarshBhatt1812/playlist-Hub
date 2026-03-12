@@ -11,8 +11,16 @@ function App() {
     const refreshAuth = async () => {
       try {
         await api.post("/auth/refresh");
+
         const user = await api.get("/users/profile");
-        dispatch(setUser(user.data));
+
+        dispatch(
+          setUser({
+            id: user.data.user.id,
+            name: user.data.user.name,
+            isAuthenticated: true,
+          })
+        );
       } catch (err) {
         console.log("User not logged in", err);
       }
@@ -27,10 +35,12 @@ function App() {
         console.log("Silent refresh failed", err);
       }
     };
+
     const interval = setInterval(silentRefresh, 12 * 60 * 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [dispatch]);
+
   return <Router />;
 }
 

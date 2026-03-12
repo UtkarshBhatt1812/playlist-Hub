@@ -9,15 +9,16 @@ if (!process.env.ACCESS_TOKEN_SECRET || !process.env.REFRESH_TOKEN_SECRET) {
 
 const getAccessToken = (user) => {
     const payload = {
-        id : user.id,
+        id : user._id,
         email : user.email,
-        name : user.name
+        name : user.username,
+        image : user.image
     }
     return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn : process.env.ACCESS_TOKEN_EXPIRY});
 }
 const getRefreshToken = (user) =>{
     const payload = {
-        userid : user.id
+        userid : user._id
     }
     return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {expiresIn : process.env.REFRESH_TOKEN_EXPIRY});
 }

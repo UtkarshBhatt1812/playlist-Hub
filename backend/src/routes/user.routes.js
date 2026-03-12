@@ -4,11 +4,12 @@ import  authMiddleware from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
 router.get("/profile", authMiddleware, (req, res) => {
+
   res.status(200).json({
     success: true,
       user: {
-        id: req.user._id,
-        username: req.user.username,
+        id: req.user.id,
+        name: req.user.name,
         email: req.user.email,
         image: req.user.image,
       },

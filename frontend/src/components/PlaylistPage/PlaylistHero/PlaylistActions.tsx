@@ -17,9 +17,8 @@ const PlaylistActions: React.FC<{ prevLiked: boolean }> = ({ prevLiked }  ) => {
  const [isLiked, setIsLiked] = React.useState(prevLiked);
 
   const handleLike = async() => {
-const result =  await dispatch(toggleLike(playlistId)).unwrap();
-setIsLiked(prev=>!prev);
-
+  const result =  await dispatch(toggleLike(playlistId)).unwrap();
+  setIsLiked(!result);
   };
 
   const handlePlay = () => {
