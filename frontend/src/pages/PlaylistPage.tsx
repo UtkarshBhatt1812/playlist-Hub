@@ -5,11 +5,12 @@ import SidebarPanel from "@/components/PlaylistPage/SidebarPanel/SidebarPanel";
 import api from "@/services/api";
 import { useParams } from "react-router-dom";
 import { type SpotifyPlaylist } from "@/components/PlaylistPage/playlist.types";
+import type { BackendPlaylist } from "@/features/playlist/playlist.types";
 // import CommentSection from "@/components/PlaylistPage/CommentSection/CommentSection";
 const getPlaylistById = async (id : string) => {
   try {
     const response = await api.get(`/playlists/${id}`);
-    return response.data as SpotifyPlaylist;
+    return response.data
   } catch (error) 
   {
     console.error("Error fetching playlist:", error);
@@ -17,18 +18,26 @@ const getPlaylistById = async (id : string) => {
 
   }
 };
-const PlaylistPage: React.FC = () => {
+const PlaylistPage: React.FC =  () => {
   const playlistId = useParams().id;
-  const [playlist, setPlaylist] = React.useState<SpotifyPlaylist | null>(null);
-  useEffect(() => {
+  const [playlist, setPlaylist] = React.useState<BackendPlaylist | null>(null);
+ 
   const fetchPlaylist = async () => {
     if (playlistId) {
       const data = await getPlaylistById(playlistId);
-      setPlaylist(data);
+      return data ; 
     }
-  };
+  }
+  
 
-  fetchPlaylist();
+
+
+useEffect(() => {
+  const loadPlaylist = async () => {
+    const data = await fetchPlaylist();
+    setPlaylist(data);
+  };
+  loadPlaylist();
 }, [playlistId]);
 
   return (

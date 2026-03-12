@@ -2,7 +2,7 @@ import cloudinary from "../../services/cloudinary.service.js";
 import fs from "fs/promises";
 import { Playlist } from "../../models/playlist.model.js";
 import ApiError from "../../utils/ApiError.js";
-
+import {User} from "../../models/user.model.js";
 const extractSpotifyId = (urlOrId) => {
   if (urlOrId.includes("spotify.com")) {
     return urlOrId.split("/track/")[1]?.split("?")[0];
@@ -11,10 +11,15 @@ const extractSpotifyId = (urlOrId) => {
 };
 
 export const createPlaylist = async (req, res) => {
+  let uploadedFilePath = null;
+
   try {
+
     console.log("body:", req.body);
     console.log("file:", req.file);
-    
+
+    const userId = req.user.id;
+
     let {
       title,
       description,
@@ -27,32 +32,29 @@ export const createPlaylist = async (req, res) => {
       throw new ApiError(400, "Playlist title is required");
     }
 
-    //multipart convert to string
-    if (typeof songs === "string") {
-      songs = JSON.parse(songs);
-    }
-
-    if (typeof tags === "string") {
-      tags = JSON.parse(tags);
-    }
-    if (typeof isPublic === "string") {
-      isPublic = isPublic === "true";
-    }
+    // multipart -> JSON conversion
+    if (typeof songs === "string") songs = JSON.parse(songs);
+    if (typeof tags === "string") tags = JSON.parse(tags);
+    if (typeof isPublic === "string") isPublic = isPublic === "true";
 
     let imageUrl = null;
 
     if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, {
+
+      uploadedFilePath = req.file.path;
+
+      const result = await cloudinary.uploader.upload(uploadedFilePath, {
         folder: "playlist_covers",
         transformation: [{ width: 300, height: 300, crop: "fill" }],
       });
+
       imageUrl = result.secure_url;
     }
 
     const playlist = await Playlist.create({
       name: title,
       description,
-      owner: req.user.id,
+      owner: userId,
       songs,
       isPublic,
       coverImage: imageUrl,
@@ -61,19 +63,27 @@ export const createPlaylist = async (req, res) => {
       likes: [],
     });
 
+    const user = await User.findById(userId);
+    if (user) {
+      user.myPlaylist.push(playlist._id);
+      await user.save();
+    }
     res.status(201).json(playlist);
+
   } catch (error) {
+
     console.log("error:", error);
 
     res.status(400).json({
-      message: "Successfully Created Playlist",
+      message: "Failed to create playlist",
       error: error.message,
     });
-  }
-  finally {
-    if (req.file.path) {
+
+  } finally {
+
+    if (uploadedFilePath) {
       try {
-        await fs.unlink(req.file.path);
+        await fs.unlink(uploadedFilePath);
       } catch (err) {
         console.log("File deletion error:", err.message);
       }
@@ -81,7 +91,6 @@ export const createPlaylist = async (req, res) => {
 
   }
 };
-
 
 export const getAllPlaylists = async (req, res) => {
   const playlists = await Playlist.find().populate(
@@ -91,7 +100,18 @@ export const getAllPlaylists = async (req, res) => {
   res.json(playlists);
 };
 
+export const getPlaylistById = async (req, res) => {
+  const playlist = await Playlist.findById(req.params.id).populate(
+    "owner",
+    "username email",
+  );
 
+  if (!playlist) {
+    throw new ApiError(404, "Playlist not found");
+  }
+  
+  res.json(playlist);
+}
 export const getPublicPlaylists = async (req, res) => {
   const playlists = await Playlist.find({ isPublic: true }).populate(
     "owner",
@@ -107,10 +127,48 @@ export const getMyPlaylists = async (req, res) => {
 
   res.json(playlists);
 };
+export const toggleLike = async(req,res)=>{
 
+  const playlist = await Playlist.findById(req.params.id);
+  
+  if (!playlist) {  
+    throw new ApiError(404, "Playlist not found");
+  }
+
+
+
+
+ const userId = req.user.id;
+
+const alreadyLiked = playlist.likes.some(
+  (id) => id?.toString() === userId
+);
+
+if (alreadyLiked) {
+  await Playlist.findByIdAndUpdate(
+    playlist._id,
+    { $pull: { likes: userId } }
+    
+  );
+  playlist.totalLikes -= 1  ;
+} else {
+  await Playlist.findByIdAndUpdate(
+    playlist._id,
+    { $addToSet: { likes: userId } }
+  );
+  playlist.totalLikes += 1  ;
+}
+
+
+
+  await playlist.save();
+
+  console.log("Playlist after Save : ", playlist);
+  res.json(alreadyLiked? true : false);
+}
 export const getSavedPlaylists = async (req, res) => {
   const playlists = await Playlist.find({
-    likes: req.user._id,
+    likes: req.user.id,
   });
 
   res.json(playlists);

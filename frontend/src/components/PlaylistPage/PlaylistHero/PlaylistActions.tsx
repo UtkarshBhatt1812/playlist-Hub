@@ -1,44 +1,30 @@
 import React from "react";
 import { Play, Heart, Download } from "lucide-react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useAppSelector } from "@/hooks/useAppSelector";
+import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-// import { toggleSave } from "@/features/playlist/playlistSlice";
+import { toggleLike } from "@/features/playlist/playlistThunks";
+
 
 
 
 // iski saved list chalani h jo playlist slice me h, aur usme se check karna h ki kya current playlist saved h ya nahi, uske hisab se heart icon fill karna h ya nahi, aur toggleSave action dispatch karna h jab user save button pe click kare.
-const PlaylistActions: React.FC<{ url: string }> = ({ url}) => {
+const PlaylistActions: React.FC<{ prevLiked: boolean }> = ({ prevLiked }  ) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
 
-  const playlistId = Number(id);
+  const playlistId = id
 
+ const [isLiked, setIsLiked] = React.useState(prevLiked);
 
-
-  const allPlaylist = useAppSelector(state =>
-    state.playlist.allPlaylist
-  );
-  const playlist = allPlaylist.find(p => p.id === playlistId);
-
-  const isSaved = useAppSelector(state =>
-    state.playlist.saved.some(p => p.id === playlistId)
-  );
-
-  console.log(playlist)
-  const handleSave = () => {
-    console.log('allPlaylist:', allPlaylist);
-    if (!playlist) return;
-    // dispatch(toggleSave(playlist));
-    console.log('playlist toggled:', playlist)
-    
+  const handleLike = async() => {
+const result =  await dispatch(toggleLike(playlistId)).unwrap();
+setIsLiked(prev=>!prev);
 
   };
 
   const handlePlay = () => {
-  if (!url) return;
-  window.open(url, "_blank", "noopener,noreferrer");
+  
+
 };
 
   const handleDownload = () => {
@@ -59,19 +45,19 @@ const PlaylistActions: React.FC<{ url: string }> = ({ url}) => {
 
 
       <button
-        onClick={handleSave}
+        onClick={handleLike}
         className={`
           p-3 rounded-full
           transition-all duration-300
           cursor-pointer
           bg-neutral-200
           hover:scale-105
-          ${isSaved ? "text-red-500" : "text-neutral-600 hover:text-red-500"}
-          ${isSaved ? "scale-110 text-red-500" : ""}
+          ${isLiked ? "text-red-500" : "text-neutral-600 hover:text-red-500"}
+          ${isLiked ? "scale-110 text-red-500" : ""}
 
         `}
       >
-        <Heart size={16} fill={isSaved ? "red" : "none"} />
+        <Heart size={16} fill={isLiked ? "red" : "none"} />
       </button>
 
 

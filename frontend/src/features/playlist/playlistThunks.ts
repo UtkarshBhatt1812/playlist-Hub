@@ -78,10 +78,20 @@ export const toggleSavePlaylist = createAsyncThunk<Playlist, string>(
     }
   },
 );
-export const toggleLike = createAsyncThunk<Playlist,void>
-("/playlist/togglelike",async (_,{rejectWithValue}) =>{
-     api.post(`/playlists/${userId}/toggleLike`)
-})
+export const toggleLike = createAsyncThunk<boolean, string|null>(
+  "playlist/toggleLike",
+  async (playlistId, { rejectWithValue }) => {
+    try {
+
+      const res = await api.post(`/playlists/${playlistId}/toggleLike`);
+      return res.data as boolean;
+    } catch (error: any) {  
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to toggle playlist like",
+      );
+    }
+  }
+);
 
 export const createPlaylist = createAsyncThunk(
   "playlist/create",

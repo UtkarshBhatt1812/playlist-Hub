@@ -3,12 +3,13 @@ import Filterdiv from "@/components/Filters/Filterdiv";
 import Hero from "@/components/Hero/Hero";
 import PlaylistCard from "@/components/PlaylistCard/PlaylistCard";
 import api from "@/services/api";
+import type { BackendPlaylist } from "@/features/playlist/playlist.types";
 
 const Home: React.FC = () => {
 
   const filterRef = useRef<HTMLDivElement | null>(null);
 
-  const [playlists, setPlaylists] = useState<any[]>([]);
+  const [playlists, setPlaylists] = useState<BackendPlaylist[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const scrollToFilters = () => {
@@ -20,21 +21,17 @@ const Home: React.FC = () => {
 
   const fetchPlaylists = async () => {
     try {
-      const response = await api.get("/playlists");
-
-      setPlaylists(response.data.data || response.data);
-
+      const response = await api.get("/playlists/fetchPublic");
+      setPlaylists(response.data);
     } catch (err) {
       console.error("Error fetching playlists:", err);
       setError("Failed to load playlists");
     }
   };
 
-  
-    useEffect(() => {
-      fetchPlaylists();
-    },[]);
-    console.log(playlists)
+  useEffect(() => {
+    fetchPlaylists();
+  }, []);
 
   return (
     <section className="flex flex-col gap-6 pb-10">
@@ -50,17 +47,18 @@ const Home: React.FC = () => {
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-{/* placeholder */}
+
           {playlists.map((playlist) => (
             <PlaylistCard
-              key={playlist.id}
+              key={playlist._id}
               playlist={{
-                id: playlist.id,
+                id: playlist._id,
                 title: playlist.name,
                 subtitle: playlist.description || "",
-                image: playlist.image,
-                likes: '1.2k',
-                songs: 1,
+                image: playlist.coverImage || "",
+                likes: playlist.likes || [],
+                totalLikes: playlist.totalLikes || 0,
+                songs: playlist.songs?.length || 0,
                 featured: false
               }}
             />

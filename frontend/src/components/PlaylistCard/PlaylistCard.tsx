@@ -5,13 +5,14 @@ import { useNavigate } from "react-router-dom";
 import type { RootState } from "@/app/store";
 
 interface Playlist {
-  id: number;
+  id: string;
   title: string;
   subtitle: string;
   image: string;
-  likes?: string;
+  likes?: string[];
   songs?: number;
   featured?: boolean;
+  totalLikes ?: number;
 }
 
 interface PlaylistCardProps {
@@ -25,12 +26,9 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const savedPlaylists = useSelector(
-    (state: RootState) => state.playlist.saved
-  );
+  const savedPlaylists = null
 
-  const isSaved = savedPlaylists.some(p => p.id === playlist.id);
-
+  const isSaved = null;
   const {
     id,
     title,
@@ -39,6 +37,7 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({
     likes,
     songs,
     featured ,
+    totalLikes
   } = playlist;
 
   const handlePlay = () => {
@@ -98,10 +97,10 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({
           {likes && (
             <div className="flex items-center gap-1">
               <Heart size={14} />
-              <span>{likes}</span>
+              <span>{totalLikes}</span>
             </div>
           )}
-          {songs && (
+          {songs !== undefined && (
             <div className="flex items-center gap-1">
               <Clock size={14} />
               <span>{songs} Songs</span>
