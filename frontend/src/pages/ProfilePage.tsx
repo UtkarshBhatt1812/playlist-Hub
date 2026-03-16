@@ -36,7 +36,7 @@ const formatStat = (value: number) =>
     maximumFractionDigits: value >= 1000 ? 1 : 0,
   }).format(value);
 
-const ProfilePage: React.FC =  () => {
+const ProfilePage: React.FC = () => {
   const { id: profileId } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -185,9 +185,9 @@ const ProfilePage: React.FC =  () => {
       setProfile((currentProfile) =>
         currentProfile
           ? {
-              ...currentProfile,
-              image: nextImage,
-            }
+            ...currentProfile,
+            image: nextImage,
+          }
           : currentProfile,
       );
       dispatch(setUserImage(nextImage));

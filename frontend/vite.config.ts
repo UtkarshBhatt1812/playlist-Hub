@@ -24,3 +24,4 @@ export default defineConfig({
     },
   }
 })
+//:todo : responsive , upgrade to pro , music player , outh login wth spotify  

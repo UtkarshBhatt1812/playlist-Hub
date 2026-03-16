@@ -1,4 +1,4 @@
- import React, { useState } from "react";
+import React, { useState } from "react";
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "@/features/auth/authThunks";
@@ -7,7 +7,7 @@ import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useAppSelector } from "@/hooks/useAppSelector";
 
 const MAX_ATTEMPTS = 5;
-const LOCK_TIME = 60000; 
+const LOCK_TIME = 60000;
 
 const LoginPage: React.FC = () => {
   const loading = useAppSelector((state: any) => state.auth.loading);

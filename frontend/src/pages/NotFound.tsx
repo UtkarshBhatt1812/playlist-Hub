@@ -39,7 +39,7 @@ const NotFound: React.FC = () => {
         <div className="flex justify-center mb-6">
           <div className="w-24 h-24 flex items-center justify-center rounded-full bg-white/10 shadow-sm ">
             <Headphones className="w-10 h-10 text-accentText" />
-    </div>
+          </div>
         </div>
 
 
@@ -64,7 +64,7 @@ const NotFound: React.FC = () => {
           Let’s get you back to the rhythm.
         </p>
 
-        
+
 
 
         <div className="mt-8 flex gap-4 justify-center flex-wrap">
@@ -106,7 +106,7 @@ const NotFound: React.FC = () => {
           </Link>
         </div>
 
-        
+
       </div>
     </div>
   );

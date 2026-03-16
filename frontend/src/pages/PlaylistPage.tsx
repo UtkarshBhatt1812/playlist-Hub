@@ -42,14 +42,14 @@ const PlaylistPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br
       from-[#efe9ff]
       via-[#f6f3ff]
-      to-[#e8f6ff] px-10 py-8">
-      <div className="flex gap-8">
+      to-[#e8f6ff] px-4 sm:px-10 py-6 sm:py-8">
+      <div className="flex flex-col lg:flex-row gap-6 sm:gap-8">
 
-        <div className="flex-1 flex flex-col gap-8">
+        <div className="flex-1 flex flex-col gap-6 sm:gap-8 min-w-0">
           <PlaylistHero playlist={playlist} />
           <TrackList />
         </div>
-{playlist?.owner && <SidebarPanel owner={playlist.owner} />}
+        {playlist?.owner && <SidebarPanel owner={playlist.owner} />}
 
       </div>
     </div>

@@ -62,62 +62,62 @@ const SignupPage: React.FC = () => {
   };
 
   const handleSignup = async () => {
-  try {
-    setError(null);
+    try {
+      setError(null);
 
-    const email = form.email.trim();
-    const username = form.username.trim();
-    const password = form.password;
+      const email = form.email.trim();
+      const username = form.username.trim();
+      const password = form.password;
 
 
-    if (!username || !email || !password) {
-      setError("All fields are required");
-      return;
+      if (!username || !email || !password) {
+        setError("All fields are required");
+        return;
+      }
+
+
+      const emailRegex = /\S+@\S+\.\S+/;
+
+      if (!emailRegex.test(email)) {
+        setError("Please enter a valid email address");
+        return;
+      }
+
+
+      if (password.length < 8) {
+        setError("Password must be at least 8 characters");
+        return;
+      }
+
+      const response = await dispatch(
+        registerUser({
+          username,
+          email,
+          password
+        })
+      ).unwrap();
+      if (response.statusCode !== 201) {
+        setError(response.payload.message || "Signup failed. Please try again.");
+        return;
+      }
+      dispatch(
+        setUser({
+          id: response.data.id,
+          name: response.data.username,
+          image: response.data.image ?? "",
+          isAuthenticated: true,
+          savedPlaylists: response.data.savedPlaylists ?? [],
+        })
+      );
+
+      navigate("/");
+
+    } catch (err: any) {
+      setError(
+        "Signup failed. Please try again."
+      );
     }
-
-
-    const emailRegex = /\S+@\S+\.\S+/;
-
-    if (!emailRegex.test(email)) {
-      setError("Please enter a valid email address");
-      return;
-    }
-
-
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters");
-      return;
-    }
-
-    const response = await dispatch(
-      registerUser({
-        username,
-        email,
-        password
-      })
-    ).unwrap();
-    if(response.statusCode !== 201) {
-      setError(response.payload.message || "Signup failed. Please try again.");
-      return;
-    }
-    dispatch(
-      setUser({
-        id: response.data.id,
-        name: response.data.username,
-        image: response.data.image ?? "",
-        isAuthenticated: true,
-        savedPlaylists: response.data.savedPlaylists ?? [],
-      })
-    );
-
-    navigate("/");
-
-  } catch (err: any) {
-    setError(
-       "Signup failed. Please try again."
-    );
-  }
-};
+  };
   return (
     <div className="
       min-h-screen
@@ -162,7 +162,7 @@ const SignupPage: React.FC = () => {
         ">
 
           <h2 className="text-3xl font-bold text-primaryText font-headingText ">
-            Join the Hub 
+            Join the Hub
           </h2>
 
           <p className="text-sm text-secondaryText mt-2 mb-8 font-smtext tracking-wide">
@@ -292,10 +292,10 @@ const SignupPage: React.FC = () => {
               <div className="flex-1 h-px bg-neutral-300" />
             </div>
 
-            
+
             <div className="flex gap-4">
               <button
-  className="
+                className="
     flex items-center justify-center gap-1
     flex-1 py-3 rounded-xl
     bg-white/60 backdrop-blur-md border border-white/40
@@ -305,15 +305,15 @@ const SignupPage: React.FC = () => {
     hover:-translate-y-0.5
     transition-all duration-300 cursor-pointer
   "
->
+              >
 
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    className="w-5 h-5"
-    fill="#1DB954"
-  >
-    <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-5 h-5"
+                  fill="#1DB954"
+                >
+                  <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 
     12-5.37 12-12S18.63 0 12 0zm5.48 
     17.4a.75.75 0 01-1.03.25c-2.83-1.73-6.4-2.12-10.6-1.16a.75.75 
     0 11-.33-1.46c4.6-1.05 8.58-.61 
@@ -325,14 +325,14 @@ const SignupPage: React.FC = () => {
     1.12 0 11-.87-2.06c4.3-1.8 11.48-1.45 
     16.02 1.19a1.12 1.12 0 11-1.15 
     1.82z" />
-  </svg>
+                </svg>
 
-  <span className="text-sm font-medium text-primaryText">
-     Spotify
-  </span>
-</button>
-<button
-  className="
+                <span className="text-sm font-medium text-primaryText">
+                  Spotify
+                </span>
+              </button>
+              <button
+                className="
     flex items-center justify-center gap-1
     flex-1 py-3 rounded-xl
 
@@ -343,37 +343,37 @@ const SignupPage: React.FC = () => {
     hover:-translate-y-0.5
     transition-all duration-300 cursor-pointer
   "
->
+              >
 
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 48 48"
-    className="w-5 h-5"
-  >
-    <path fill="#EA4335" d="M24 9.5c3.54 0 6.68 1.22 9.17 
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 48 48"
+                  className="w-5 h-5"
+                >
+                  <path fill="#EA4335" d="M24 9.5c3.54 0 6.68 1.22 9.17 
     3.6l6.86-6.86C35.88 2.06 30.39 0 
     24 0 14.62 0 6.51 5.38 2.69 
     13.22l7.99 6.2C12.43 13.12 17.7 
     9.5 24 9.5z" />
-    <path fill="#4285F4" d="M46.5 24.5c0-1.63-.15-3.2-.43-4.72H24v9.02h12.67c-.55 
+                  <path fill="#4285F4" d="M46.5 24.5c0-1.63-.15-3.2-.43-4.72H24v9.02h12.67c-.55 
     2.97-2.19 5.48-4.68 
     7.18l7.2 5.59c4.2-3.87 
     6.61-9.57 6.61-16.07z" />
-    <path fill="#FBBC05" d="M10.68 28.42A14.44 14.44 
+                  <path fill="#FBBC05" d="M10.68 28.42A14.44 14.44 
     0 019.5 24c0-1.54.27-3.03.75-4.42l-7.99-6.2A23.94 
     23.94 0 000 24c0 3.8.91 7.39 2.69 
     10.78l7.99-6.36z" />
-    <path fill="#34A853" d="M24 48c6.39 0 11.75-2.11 
+                  <path fill="#34A853" d="M24 48c6.39 0 11.75-2.11 
     15.66-5.73l-7.2-5.59c-2 1.35-4.57 
     2.15-8.46 2.15-6.3 
     0-11.57-3.62-13.32-8.92l-7.99 
     6.36C6.51 42.62 14.62 48 24 48z" />
-  </svg>
+                </svg>
 
-  <span className="text-sm font-medium text-primaryText">
-     Google
-  </span>
-</button>
+                <span className="text-sm font-medium text-primaryText">
+                  Google
+                </span>
+              </button>
 
             </div>
 
@@ -393,12 +393,12 @@ const SignupPage: React.FC = () => {
         </div>
 
 
-      
+
 
       </div>
 
 
-      
+
     </div>
   );
 };

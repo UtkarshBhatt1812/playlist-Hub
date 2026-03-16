@@ -12,9 +12,9 @@ function Filterbtn({ label, active = false, onClick }: Props) {
       onClick={onClick}
       className={`
         px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-xs font-subHeadingText
-        shadow-md sm:shadow-2xl shadow-red-200
+        shadow-md sm:shadow-2xl  h-full w-20 mt-5 ml-2
         transition-all duration-300
-        cursor-pointer shrink-0
+        cursor-pointer shrink-0 
 
         ${
           active

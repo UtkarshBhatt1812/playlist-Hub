@@ -235,8 +235,8 @@ const AddSongsPage: React.FC = () => {
         const apiError = error as AxiosError<ApiErrorResponse>;
         setFeedbackMessage(
           apiError.response?.data?.message ||
-            apiError.response?.data?.error ||
-            "Failed to add song.",
+          apiError.response?.data?.error ||
+          "Failed to add song.",
         );
       } finally {
         setAddingSongId(null);
@@ -268,8 +268,8 @@ const AddSongsPage: React.FC = () => {
         const apiError = error as AxiosError<ApiErrorResponse>;
         setFeedbackMessage(
           apiError.response?.data?.message ||
-            apiError.response?.data?.error ||
-            "Failed to remove song.",
+          apiError.response?.data?.error ||
+          "Failed to remove song.",
         );
       } finally {
         setRemovingSongId(null);

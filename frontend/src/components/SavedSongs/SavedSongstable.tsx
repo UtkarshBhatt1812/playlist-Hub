@@ -21,24 +21,25 @@ const SavedSongsTable: React.FC<SavedSongsTableProps> = ({ songs }) => {
 
   return (
     <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-
-      <div className="grid grid-cols-6 text-xs text-secondaryText px-6 py-4 border-b">
-        <span>#</span>
-        <span className="col-span-2">TITLE</span>
-        <span>ALBUM</span>
-        <span>DATE ADDED</span>
+      {/* Header */}
+      <div className="grid grid-cols-[30px_1fr_40px] sm:grid-cols-[40px_2fr_1fr_1fr_60px] md:grid-cols-[40px_2fr_1fr_1fr_80px] gap-2 sm:gap-4 text-[10px] sm:text-xs text-secondaryText px-3 sm:px-6 py-3 sm:py-4 border-b">
+        <span className="text-center sm:text-left">#</span>
+        <span>TITLE</span>
+        <span className="hidden sm:block">ALBUM</span>
+        <span className="hidden sm:block">DATE ADDED</span>
         <span className="text-right">⏱</span>
       </div>
 
+      {/* Rows */}
       {songs.map((song, index) => (
         <div
           key={song.spotifyId}
-          className="grid grid-cols-6 px-6 py-4 text-sm items-center hover:bg-neutral-50 transition"
+          className="grid grid-cols-[30px_1fr_40px] sm:grid-cols-[40px_2fr_1fr_1fr_60px] md:grid-cols-[40px_2fr_1fr_1fr_80px] gap-2 sm:gap-4 px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm items-center hover:bg-neutral-50 transition"
         >
-          <span>{index + 1}</span>
+          <span className="text-center sm:text-left text-secondaryText">{index + 1}</span>
 
-          <div className="col-span-2 flex items-center gap-3">
-            <div className="h-11 w-11 overflow-hidden rounded-lg bg-neutral-100">
+          <div className="flex items-center gap-2 sm:gap-3 overflow-hidden">
+            <div className="h-9 w-9 sm:h-11 sm:w-11 shrink-0 overflow-hidden rounded-md sm:rounded-lg bg-neutral-100">
               {song.coverImageUrl ? (
                 <img
                   src={song.coverImageUrl}
@@ -48,23 +49,23 @@ const SavedSongsTable: React.FC<SavedSongsTableProps> = ({ songs }) => {
               ) : null}
             </div>
 
-            <div>
-            <p className="font-medium text-primaryText">{song.name}</p>
-            <p className="text-xs text-secondaryText">
-              {getSongArtistLabel(song.artists)}
-            </p>
+            <div className="min-w-0 flex-1">
+              <p className="font-medium text-primaryText truncate">{song.name}</p>
+              <p className="text-[10px] sm:text-xs text-secondaryText truncate">
+                {getSongArtistLabel(song.artists)}
+              </p>
             </div>
           </div>
 
-          <span className="text-secondaryText">
+          <span className="hidden sm:block text-secondaryText truncate">
             {song.album || "Single"}
           </span>
 
-          <span className="text-secondaryText">
+          <span className="hidden sm:block text-secondaryText truncate">
             {formatSongAddedAt(song.addedAt)}
           </span>
 
-          <span className="text-right text-secondaryText">
+          <span className="text-right text-secondaryText text-[10px] sm:text-xs whitespace-nowrap">
             {formatSongDuration(song.durationMs)}
           </span>
         </div>

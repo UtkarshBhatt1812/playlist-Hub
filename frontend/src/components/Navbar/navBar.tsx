@@ -10,7 +10,7 @@ const NavBar: React.FC = () => {
   const { toggleMobileOpen } = useSidebar();
 
   return (
-    <div className="flex items-center justify-between p-3 sm:p-4 text-black mt-4 sm:mt-8 gap-2 sm:gap-4 z-10 relative">
+    <div className="flex items-center justify-between p-3 sm:p-4 text-black mt-4 sm:mt-8 gap-2 sm:gap-4 z-10 relative ">
       <div className="flex items-center">
         {/* Mobile hamburger — visible only on small screens */}
         <button
