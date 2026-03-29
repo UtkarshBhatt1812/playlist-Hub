@@ -3,6 +3,9 @@ import TrackRow from "./TrackRow";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "@/services/api";
 import { subscribeToRefetchEvents } from "@/lib/refetchEvents";
+import type { BackendPlaylist } from "@/features/playlist/playlist.types";
+import { useSpotifyPlayback } from "@/hooks/useSpotifyPlayback";
+import { useAppSelector } from "@/hooks/useAppSelector";
 
 type Track = {
   id: string;
@@ -10,13 +13,19 @@ type Track = {
   artist: string;
   album: string;
   durationMs: number;
+  coverImageUrl: string;
+  spotifyUrl: string;
 };
 
-const TrackList: React.FC = () => {
+const TrackList: React.FC<{ playlist: BackendPlaylist | null }> = ({ playlist }) => {
   const { id } = useParams();
   const [tracks, setTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { requestPlayback } = useSpotifyPlayback();
+  const currentTrackId = useAppSelector(
+    (state) => state.player.currentTrack?.spotifyId,
+  );
 
   const fetchTracks = useCallback(async () => {
     try {
@@ -53,6 +62,28 @@ const TrackList: React.FC = () => {
     return <div>Loading tracks...</div>;
   }
 
+  const handleTrackPlay = (index: number) => {
+    const selectedTrack = tracks[index];
+
+    if (!selectedTrack) {
+      return;
+    }
+
+    void requestPlayback({
+      uris: tracks.slice(index).map((track) => `spotify:track:${track.id}`),
+      fallbackUrl:
+        selectedTrack.spotifyUrl || `https://open.spotify.com/track/${selectedTrack.id}`,
+      meta: {
+        title: selectedTrack.title,
+        subtitle: playlist?.name || selectedTrack.artist,
+        imageUrl:
+          selectedTrack.coverImageUrl ||
+          playlist?.coverImage ||
+          "https://via.placeholder.com/300?text=No+Cover",
+      },
+    });
+  };
+
   return (
     <div>
 
@@ -72,8 +103,13 @@ const TrackList: React.FC = () => {
             No tracks in this playlist yet.
           </div>
         ) : (
-        tracks.map(track => (
-          <TrackRow key={track.id} track={track} />
+        tracks.map((track, index) => (
+          <TrackRow
+            key={track.id}
+            track={track}
+            isActive={currentTrackId === track.id}
+            onPlay={() => handleTrackPlay(index)}
+          />
         ))
         )}
 

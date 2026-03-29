@@ -5,6 +5,7 @@ import { loginUser } from "@/features/auth/authThunks";
 import { setLoading, setUser } from "@/features/auth/authSlice";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useAppSelector } from "@/hooks/useAppSelector";
+import { startSpotifyAuthFlow } from "@/lib/spotifyAuth";
 
 const MAX_ATTEMPTS = 5;
 const LOCK_TIME = 60000;
@@ -55,6 +56,10 @@ const LoginPage: React.FC = () => {
           image: response.user.image ?? "",
           isAuthenticated: true,
           savedPlaylists: response.user.savedPlaylists ?? [],
+          spotifyConnected: response.user.spotifyConnected ?? false,
+          spotifyDisplayName: response.user.spotifyDisplayName ?? "",
+          spotifyProduct: response.user.spotifyProduct ?? "",
+          spotifyAccountId: response.user.spotifyAccountId ?? "",
         }),
       );
       dispatch(setLoading(false));
@@ -69,6 +74,10 @@ const LoginPage: React.FC = () => {
           image: "",
           isAuthenticated: false,
           savedPlaylists: [],
+          spotifyConnected: false,
+          spotifyDisplayName: "",
+          spotifyProduct: "",
+          spotifyAccountId: "",
         }),
       );
       setAttempts((prev) => prev + 1);
@@ -130,7 +139,15 @@ const LoginPage: React.FC = () => {
               </button>
 
 
-              <button className="text-primaryText flex items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white/70 py-3 text-sm font-medium shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(29,185,84,0.25)]">
+              <button
+                type="button"
+                onClick={() => {
+                  void startSpotifyAuthFlow("login", "/").catch((error) => {
+                    console.error("Failed to start Spotify PKCE flow:", error);
+                  });
+                }}
+                className="text-primaryText flex items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white/70 py-3 text-sm font-medium shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(29,185,84,0.25)]"
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="h-5 w-5" fill="#1DB954">
                   {" "}
                   <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.48 17.4a.75.75 0 01-1.03.25c-2.83-1.73-6.4-2.12-10.6-1.16a.75.75 0 11-.33-1.46c4.6-1.05 8.58-.61 11.67 1.31.36.22.47.7.29 1.06zm1.47-3.27a.94.94 0 01-1.29.31c-3.24-1.99-8.17-2.57-12-1.42a.94.94 0 11-.55-1.8c4.33-1.32 9.73-.68 13.59 1.63.45.27.59.86.25 1.28zm.13-3.4c-3.89-2.31-10.3-2.53-14-.95a1.12 1.12 0 11-.87-2.06c4.3-1.8 11.48-1.45 16.02 1.19a1.12 1.12 0 11-1.15 1.82z" />

@@ -9,6 +9,8 @@ import { setUserImage } from "@/features/auth/authSlice";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import type { ProfileTab, UserProfile } from "@/features/profile/profile.types";
+import { startSpotifyAuthFlow } from "@/lib/spotifyAuth";
+import { syncAuthenticatedUser } from "@/features/auth/authSession";
 
 type ProfileResponse = {
   profile: UserProfile;
@@ -43,6 +45,15 @@ const ProfilePage: React.FC = () => {
   const isAuthenticated = useAppSelector(
     (state) => state.auth.user.isAuthenticated,
   );
+  const spotifyConnected = useAppSelector(
+    (state) => state.auth.user.spotifyConnected,
+  );
+  const spotifyDisplayName = useAppSelector(
+    (state) => state.auth.user.spotifyDisplayName,
+  );
+  const spotifyProduct = useAppSelector(
+    (state) => state.auth.user.spotifyProduct,
+  );
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -54,6 +65,7 @@ const ProfilePage: React.FC = () => {
   const [isPhotoMenuOpen, setIsPhotoMenuOpen] = useState(false);
   const [isPhotoViewerOpen, setIsPhotoViewerOpen] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [isSpotifyActionLoading, setIsSpotifyActionLoading] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -243,6 +255,45 @@ const ProfilePage: React.FC = () => {
     });
   };
 
+  const handleSpotifyAction = async () => {
+    if (!profile?.isOwnProfile || !profileId) {
+      return;
+    }
+
+    if (!spotifyConnected) {
+      try {
+        await api.post("/auth/refresh");
+      } catch {
+        // Ignore refresh failures and let the backend validate the link request.
+      }
+
+      try {
+        await startSpotifyAuthFlow("link", `/profile/${profileId}`);
+      } catch (err) {
+        const nextError =
+          err instanceof Error
+            ? err.message
+            : "Failed to start Spotify authentication.";
+        setActionError(nextError);
+      }
+      return;
+    }
+
+    try {
+      setIsSpotifyActionLoading(true);
+      setActionError(null);
+      await api.post("/auth/spotify/unlink");
+      await syncAuthenticatedUser(dispatch);
+    } catch (err) {
+      const apiError = err as AxiosError<ApiErrorResponse>;
+      setActionError(
+        apiError.response?.data?.message || "Failed to update Spotify connection.",
+      );
+    } finally {
+      setIsSpotifyActionLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-linear-to-br from-10% via-60% via-[#f9f6ff] from-[#fefdff] to-[#fcfffe] px-10 py-8">
@@ -302,9 +353,14 @@ const ProfilePage: React.FC = () => {
         isFollowing={profile.isFollowing}
         isFollowLoading={isFollowLoading}
         isUploadingAvatar={isUploadingAvatar}
+        spotifyConnected={spotifyConnected}
+        spotifyProduct={spotifyProduct}
+        spotifyDisplayName={spotifyDisplayName}
+        isSpotifyActionLoading={isSpotifyActionLoading}
         onFollow={handleFollowToggle}
         onShare={handleShare}
         onAvatarClick={handleAvatarClick}
+        onSpotifyAction={handleSpotifyAction}
       />
 
       {actionError && (

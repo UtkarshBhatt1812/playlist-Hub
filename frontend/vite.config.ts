@@ -6,7 +6,7 @@ import tailwindcss from "@tailwindcss/vite"
 // https://vite.dev/config/
 export default defineConfig({
    server: {
-    host: true
+    host: "127.0.0.1"
   },
   plugins: [
     tailwindcss(),

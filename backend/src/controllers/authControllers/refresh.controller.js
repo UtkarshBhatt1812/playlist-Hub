@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { User } from "../../models/user.model.js";
 import ApiError from "../../utils/ApiError.js";
 import { getAccessToken, getRefreshToken } from "../../utils/signJwt.js";
+import { setAuthCookies } from "../../utils/authCookies.js";
 
 dotenv.config();
 
@@ -47,19 +48,7 @@ const refreshController = async (req, res) => {
   await user.save();
 
 
-  res
-    .cookie("accessToken", newAccessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000,
-    })
-    .cookie("refreshToken", newRefreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    })
+  setAuthCookies(res, newAccessToken, newRefreshToken)
     .status(200)
     .json({
       success: true,

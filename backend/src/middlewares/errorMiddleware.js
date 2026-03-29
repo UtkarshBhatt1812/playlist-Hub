@@ -2,7 +2,7 @@ const errorHandler = (err, req, res, next) => {
   void next;
   console.error(err.stack);
 
-  let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  let statusCode = err.statusCode || (res.statusCode === 200 ? 500 : res.statusCode);
   let message = err.message || "Server Error";
 
 

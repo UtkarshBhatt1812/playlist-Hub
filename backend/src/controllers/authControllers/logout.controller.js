@@ -1,6 +1,10 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import {User} from "../../models/user.model.js";
+import {
+  buildAccessCookieOptions,
+  buildRefreshCookieOptions,
+} from "../../utils/authCookies.js";
 
 dotenv.config();
 
@@ -29,14 +33,12 @@ const logoutHandler = async (req, res) => {
   }
 
   res.clearCookie("refreshToken", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    ...buildRefreshCookieOptions(),
+    maxAge: undefined,
   });
   res.clearCookie("accessToken", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    ...buildAccessCookieOptions(),
+    maxAge: undefined,
   });
 
   return res.status(200).json({

@@ -41,9 +41,7 @@ const AppContent: React.FC = () => {
         </main>
       </div>
 
-      <Miniplayer
-        
-      />
+      <Miniplayer/>
     </div>
   );
 };

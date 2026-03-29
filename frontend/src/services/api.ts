@@ -18,7 +18,8 @@ api.interceptors.response.use(
       requestUrl.includes("/auth/login") ||
       requestUrl.includes("/auth/register") ||
       requestUrl.includes("/auth/refresh") ||
-      requestUrl.includes("/auth/logout");
+      requestUrl.includes("/auth/logout") ||
+      requestUrl.includes("/auth/spotify/exchange");
 
     if (
       error.response?.status !== 401 ||

@@ -4,6 +4,7 @@ import fs from "fs/promises";
 import { User } from "../../models/user.model.js";
 import ApiError from "../../utils/ApiError.js";
 import cloudinary from "../../services/cloudinary.service.js";
+import { serializeAuthUser } from "../../utils/serializeAuthUser.js";
 
 dotenv.config();
 
@@ -59,7 +60,7 @@ const buildProfilePayload = (user, requesterId) => {
 export const getCurrentUserProfile = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).select(
-      "username email image savedPlaylists followers following",
+      "username email image savedPlaylists followers following authMethods spotify",
     );
 
     if (!user) {
@@ -72,11 +73,7 @@ export const getCurrentUserProfile = async (req, res, next) => {
     res.status(200).json({
       success: true,
       user: {
-        id: user._id,
-        name: user.username,
-        email: user.email,
-        image: user.image,
-        savedPlaylists: user.savedPlaylists ?? [],
+        ...serializeAuthUser(user),
         followersCount: user.followers?.length ?? 0,
         followingCount: user.following?.length ?? 0,
         totalSaves: user.savedPlaylists?.length ?? 0,
@@ -182,7 +179,7 @@ export const updateProfileImage = async (req, res, next) => {
     uploadedFilePath = req.file.path;
 
     const user = await User.findById(req.user.id).select(
-      "username email image savedPlaylists followers following",
+      "username email image savedPlaylists followers following authMethods spotify",
     );
 
     if (!user) {
@@ -202,11 +199,7 @@ export const updateProfileImage = async (req, res, next) => {
       message: "Profile image updated successfully",
       image: user.image,
       user: {
-        id: user._id,
-        name: user.username,
-        email: user.email,
-        image: user.image,
-        savedPlaylists: user.savedPlaylists ?? [],
+        ...serializeAuthUser(user),
         followersCount: user.followers?.length ?? 0,
         followingCount: user.following?.length ?? 0,
         totalSaves: user.savedPlaylists?.length ?? 0,

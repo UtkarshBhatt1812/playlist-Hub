@@ -16,6 +16,7 @@ import SavedPlaylist from "@/pages/SavedPlaylist";
 import MyPlaylistsPage from "@/pages/MyPlaylistPage";
 import SavedSongsPage from "@/pages/SavedSongsPage";
 import AddSongsPage from "@/pages/AddSongsPage";
+import SpotifyAuthCallbackPage from "@/pages/SpotifyAuthCallbackPage";
 
 const Router = () => {
   return (
@@ -51,6 +52,7 @@ const Router = () => {
       <Route path="/create" element={
         <ProtectedRoute><CreatePlaylist /></ProtectedRoute>}
       />
+      <Route path="/auth/spotify/callback" element={<SpotifyAuthCallbackPage />} />
       <Route element={<AuthLayout />}>
         <Route
           path="/login"

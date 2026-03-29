@@ -20,9 +20,30 @@ const userSchema = mongoose.Schema({
     },
     password : {
         type : String , 
-        required : true ,
+        required : function requiredPassword() {
+          return this.authMethods?.local;
+        },
         minlength : 8,
         select : false
+    },
+    authMethods: {
+      type: new mongoose.Schema(
+        {
+          local: {
+            type: Boolean,
+            default: true,
+          },
+          spotify: {
+            type: Boolean,
+            default: false,
+          },
+        },
+        { _id: false },
+      ),
+      default: () => ({
+        local: true,
+        spotify: false,
+      }),
     },
     savedPlaylists : {
         type : [{
@@ -55,6 +76,60 @@ const userSchema = mongoose.Schema({
     songs: {
       type: [songSchema],
       default: []
+    },
+    spotify: {
+      type: new mongoose.Schema(
+        {
+          accountId: {
+            type: String,
+            default: "",
+            trim: true,
+          },
+          displayName: {
+            type: String,
+            default: "",
+            trim: true,
+          },
+          email: {
+            type: String,
+            default: "",
+            trim: true,
+          },
+          product: {
+            type: String,
+            default: "",
+            trim: true,
+          },
+          country: {
+            type: String,
+            default: "",
+            trim: true,
+          },
+          refreshToken: {
+            type: String,
+            default: "",
+          },
+          accessToken: {
+            type: String,
+            default: "",
+          },
+          accessTokenExpiresAt: {
+            type: Date,
+            default: null,
+          },
+        },
+        { _id: false },
+      ),
+      default: () => ({
+        accountId: "",
+        displayName: "",
+        email: "",
+        product: "",
+        country: "",
+        refreshToken: "",
+        accessToken: "",
+        accessTokenExpiresAt: null,
+      }),
     },
     refreshToken : {
         type : String

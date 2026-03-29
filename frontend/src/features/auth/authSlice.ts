@@ -9,6 +9,10 @@ const initialState: AuthState = {
     image: "",
     isAuthenticated: false,
     savedPlaylists: [],
+    spotifyConnected: false,
+    spotifyDisplayName: "",
+    spotifyProduct: "",
+    spotifyAccountId: "",
   },
   loading: false,
 };
@@ -30,6 +34,10 @@ const authSlice = createSlice({
         image?: string;
         isAuthenticated: boolean;
         savedPlaylists?: string[];
+        spotifyConnected?: boolean;
+        spotifyDisplayName?: string;
+        spotifyProduct?: string;
+        spotifyAccountId?: string;
       }>
     ) 
     {
@@ -39,6 +47,10 @@ const authSlice = createSlice({
         image: action.payload.image ?? "",
         isAuthenticated: action.payload.isAuthenticated ,
         savedPlaylists: action.payload.savedPlaylists ?? [],
+        spotifyConnected: action.payload.spotifyConnected ?? false,
+        spotifyDisplayName: action.payload.spotifyDisplayName ?? "",
+        spotifyProduct: action.payload.spotifyProduct ?? "",
+        spotifyAccountId: action.payload.spotifyAccountId ?? "",
       } ;
       state.loading = false;
     },
@@ -53,6 +65,10 @@ const authSlice = createSlice({
       state.user.image = "";
       state.user.isAuthenticated = false;
       state.user.savedPlaylists = [];
+      state.user.spotifyConnected = false;
+      state.user.spotifyDisplayName = "";
+      state.user.spotifyProduct = "";
+      state.user.spotifyAccountId = "";
       state.loading = false;
     },
 

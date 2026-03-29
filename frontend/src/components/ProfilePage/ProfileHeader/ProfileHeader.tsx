@@ -15,9 +15,14 @@ interface ProfileHeaderProps {
   isFollowing: boolean;
   isFollowLoading: boolean;
   isUploadingAvatar: boolean;
+  spotifyConnected: boolean;
+  spotifyProduct: string;
+  spotifyDisplayName: string;
+  isSpotifyActionLoading: boolean;
   onFollow: () => void;
   onShare: () => void;
   onAvatarClick: () => void;
+  onSpotifyAction: () => void;
 }
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({
@@ -30,9 +35,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   isFollowing,
   isFollowLoading,
   isUploadingAvatar,
+  spotifyConnected,
+  spotifyProduct,
+  spotifyDisplayName,
+  isSpotifyActionLoading,
   onFollow,
   onShare,
   onAvatarClick,
+  onSpotifyAction,
 }) => {
   const avatarImage = (
     <img
@@ -97,8 +107,13 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           isOwnProfile={isOwnProfile}
           isFollowing={isFollowing}
           isFollowLoading={isFollowLoading}
+          spotifyConnected={spotifyConnected}
+          spotifyProduct={spotifyProduct}
+          spotifyDisplayName={spotifyDisplayName}
+          isSpotifyActionLoading={isSpotifyActionLoading}
           onFollow={onFollow}
           onShare={onShare}
+          onSpotifyAction={onSpotifyAction}
         />
       </div>
     </div>

@@ -3,6 +3,8 @@ import  ApiError from "../../utils/ApiError.js"
 import { User } from "../../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { getAccessToken, getRefreshToken } from "../../utils/signJwt.js";
+import { setAuthCookies } from "../../utils/authCookies.js";
+import { serializeAuthUser } from "../../utils/serializeAuthUser.js";
 
 // key define krni h 
 
@@ -30,6 +32,10 @@ const loginController = async (req, res) => {
 
     }
 
+    if (user.authMethods?.local === false || !user.password) {
+        throw new ApiError(400, "This account uses Spotify sign in. Please continue with Spotify.");
+    }
+
     const isCorrect = await bcrypt.compare(password, user.password);
 
     if(!isCorrect ){
@@ -44,31 +50,12 @@ const loginController = async (req, res) => {
 
     
     user.refreshToken = refreshToken;
-    await user.save();
+    await user.save({ validateBeforeSave: false });
     console.log("Login User : ",user)
-    res.cookie("accessToken", accessToken, {
-        httpOnly : true,
-        secure : false,
-        sameSite : "strict",
-        maxAge : 15 * 60 * 1000
-    })
-    res.cookie("refreshToken", refreshToken, {
-        httpOnly : true,
-        secure : false,
-        sameSite : "strict",
-        maxAge : 7*24 *60 * 60 * 1000
-    })
-
-    res.status(200).json({
+    setAuthCookies(res, accessToken, refreshToken).status(200).json({
         success : true,
         message : "Login successful",
-        user : {
-            id : user._id,
-            username : user.username,
-            email : user.email,
-            image : user.image,
-            savedPlaylists: user.savedPlaylists ?? [],
-        }
+        user : serializeAuthUser(user)
     })
 
 }

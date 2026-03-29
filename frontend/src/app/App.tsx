@@ -1,8 +1,9 @@
-import { setUser } from "@/features/auth/authSlice";
+import { clearAuthenticatedUser, syncAuthenticatedUser } from "@/features/auth/authSession";
 import Router from "./router";
 import api from "@/services/api";
 import { useEffect } from "react";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
+import SpotifyPlayerBootstrap from "@/components/Miniplayer/SpotifyPlayerBootstrap";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -11,20 +12,10 @@ function App() {
     const refreshAuth = async () => {
       try {
         await api.post("/auth/refresh");
-
-        const user = await api.get("/users/profile");
-
-        dispatch(
-          setUser({
-            id: user.data.user.id,
-            name: user.data.user.name,
-            image: user.data.user.image,
-            isAuthenticated: true,
-            savedPlaylists: user.data.user.savedPlaylists ?? [],
-          })
-        );
+        await syncAuthenticatedUser(dispatch);
       } catch (err) {
         console.log("User not logged in", err);
+        clearAuthenticatedUser(dispatch);
       }
     };
 
@@ -43,7 +34,12 @@ function App() {
     return () => clearInterval(interval);
   }, [dispatch]);
 
-  return <Router />;
+  return (
+    <>
+      <SpotifyPlayerBootstrap />
+      <Router />
+    </>
+  );
 }
 
 export default App;

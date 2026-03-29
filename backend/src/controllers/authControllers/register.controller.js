@@ -2,6 +2,8 @@ import bcrypt from "bcryptjs";
 import { User } from "../../models/user.model.js";
 import ApiResponse from "../../utils/ApiResonse.js";
 import { getAccessToken, getRefreshToken } from "../../utils/signJwt.js";
+import { setAuthCookies } from "../../utils/authCookies.js";
+import { serializeAuthUser } from "../../utils/serializeAuthUser.js";
 
 const registerController = async (req, res) => {
   const { username, email, password } = req.body;
@@ -48,6 +50,10 @@ const registerController = async (req, res) => {
     username: trimmedUsername,
     email: trimmedEmail,
     password: hashedPassword,
+    authMethods: {
+      local: true,
+      spotify: false,
+    },
   });
 
   const accessToken = getAccessToken(user);
@@ -56,27 +62,11 @@ const registerController = async (req, res) => {
   user.refreshToken = refreshToken;
   await user.save({ validateBeforeSave: false });
 
-  res
-    .cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 15 * 60 * 1000,
-    })
-    .cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    })
+  setAuthCookies(res, accessToken, refreshToken)
     .status(201)
     .json(
       new ApiResponse(201, "User registered successfully", {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        image: user.image,
-        savedPlaylists: user.savedPlaylists ?? [],
+        ...serializeAuthUser(user),
       })
     );
 };

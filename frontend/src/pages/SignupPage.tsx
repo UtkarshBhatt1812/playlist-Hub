@@ -107,6 +107,10 @@ const SignupPage: React.FC = () => {
           image: response.data.image ?? "",
           isAuthenticated: true,
           savedPlaylists: response.data.savedPlaylists ?? [],
+          spotifyConnected: response.data.spotifyConnected ?? false,
+          spotifyDisplayName: response.data.spotifyDisplayName ?? "",
+          spotifyProduct: response.data.spotifyProduct ?? "",
+          spotifyAccountId: response.data.spotifyAccountId ?? "",
         })
       );
 

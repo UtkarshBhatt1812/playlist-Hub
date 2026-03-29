@@ -4,11 +4,11 @@ import { useParams } from "react-router-dom";
 import { toggleLike } from "@/features/playlist/playlistThunks";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 
-
-
-
-
-const PlaylistActions: React.FC<{ prevLiked: boolean }> = ({ prevLiked }  ) => {
+const PlaylistActions: React.FC<{
+  prevLiked: boolean;
+  onPlay: () => void;
+  canPlay: boolean;
+}> = ({ prevLiked, onPlay, canPlay }) => {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
 
@@ -29,11 +29,6 @@ const PlaylistActions: React.FC<{ prevLiked: boolean }> = ({ prevLiked }  ) => {
     setIsLiked(!result);
   };
 
-  const handlePlay = () => {
-  
-
-};
-
   const handleDownload = () => {
     console.log("Downloading playlist:", playlistId);
   };
@@ -43,8 +38,9 @@ const PlaylistActions: React.FC<{ prevLiked: boolean }> = ({ prevLiked }  ) => {
       
 
       <button
-        onClick={handlePlay}
-        className="bg-primaryText hover:scale-105 transition-transform duration-300 text-white px-6 py-3 rounded-full flex items-center gap-2 cursor-pointer"
+        onClick={onPlay}
+        disabled={!canPlay}
+        className="bg-primaryText hover:scale-105 transition-transform duration-300 text-white px-6 py-3 rounded-full flex items-center gap-2 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
       >
         <Play size={16} />
         Play
