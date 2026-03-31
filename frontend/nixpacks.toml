@@ -10,4 +10,4 @@ cmds = [
 cmds = ["npm run build"]
 
 [start]
-cmd = "serve -s dist -l 3000"
+cmd = "npm run start"
